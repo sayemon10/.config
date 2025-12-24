@@ -1,22 +1,21 @@
-# .bashrc
-
+# ~/.bashrc
 # Source global definitions
 if [ -f /etc/bashrc ]; then
     . /etc/bashrc
 fi
 
-# User specific environment
+# User-specific environment and PATH
 if ! [[ "$PATH" =~ "$HOME/.local/bin:$HOME/bin:" ]]; then
     PATH="$HOME/.local/bin:$HOME/bin:$PATH"
 fi
 export PATH
-
-# Uncomment the following line if you don't like systemctl's auto-paging feature:
+export PYTHONPATH=/usr/local/lib/python3.14/site-packages:$PYTHONPATH
+# Uncomment if you don't like systemctl's auto-paging feature
 # export SYSTEMD_PAGER=
 
-# User specific aliases and functions
+# Source modular configs from ~/.bashrc.d (good practice for extensions)
 if [ -d ~/.bashrc.d ]; then
-    for rc in ~/.bashrc.d/*; do
+    for rc in ~/.bashrc.d/*.sh; do  # Only source .sh files to avoid issues
         if [ -f "$rc" ]; then
             . "$rc"
         fi
@@ -24,42 +23,71 @@ if [ -d ~/.bashrc.d ]; then
 fi
 unset rc
 
-export NVM_DIR="$HOME/.nvm"
-[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
-[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
-
-# bun
-export BUN_INSTALL="$HOME/.bun"
-export PATH="$BUN_INSTALL/bin:$PATH"
-unset HISTFILE
-
-# Source the official Git prompt script
-# This path was found using 'find /usr/share/doc/git -name git-prompt.sh'
-if [ -f /usr/share/doc/git/contrib/completion/git-prompt.sh ]; then
-  . /usr/share/doc/git/contrib/completion/git-prompt.sh
+# Useful aliases (expanded for productivity)
+alias up='sudo dnf upgrade --refresh -y'
+alias clean='sudo dnf autoremove -y && sudo dnf clean all'  # Also cleans cache
+alias c='clear'
+alias cls='clear && ls'  # Clear and list
+alias ll='ls -lh'  # Human-readable sizes
+alias la='ls -lAh'  # All files, human-readable
+alias grep='grep --color=auto'  # Colorized grep
+alias diff='diff --color=auto'  # Colorized diff
+alias ..='cd ..'
+alias ...='cd ../..'
+# alias vi='nvim'  # If you use Neovim; adjust as needed
+unset HISTFILE 
+# Enable color support for ls (Fedora default, but explicit for clarity)
+if [ -x /usr/bin/dircolors ]; then
+    test -r ~/.dircolors && eval "$(dircolors -b ~/.dircolors)" || eval "$(dircolors -b)"
+    alias ls='ls --color=auto'
 fi
 
-# Optional: Configure __git_ps1 to show more info
-GIT_PS1_SHOWDIRTYSTATE=true       # Show '*' for dirty, '+' for staged
-GIT_PS1_SHOWUNTRACKEDFILES=true   # Show '%' for untracked files
-GIT_PS1_SHOWSTASHSTATE=true       # Show '$' for stashed changes
-GIT_PS1_SHOWUPSTREAM="auto"       # Show 'ahead N', 'behind N', 'diverged' etc.
-GIT_PS1_SHOWCOLORHINTS=true       # Add colors to the output of __git_ps1
+# NVM setup (Node Version Manager)
+export NVM_DIR="$HOME/.nvm"
+[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
+[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"
 
-# Customize your PS1 to include the Git branch
-# This example adds the branch in parentheses and removes the username
-# and combines it with your previous desired prompt (fedora:~/current/dir$)
-export PS1='\[\033[0;32m\]fedora:\w\[\033[0m\]$(__git_ps1 " (\[\033[0;36m\]%s\[\033[0m\])")\$ '
-# If you want color for the Git branch, ensure GIT_PS1_SHOWCOLORHINTS is enabled
-# and your terminal supports colors.
-# Example with colors for directory and git branch:
-# export PS1='\[\033[0;34m\]fedora:\w\[\033[0m\]$(__git_ps1 " (\[\033[0;33m\]%s\[\033[0m\])")\$ '
-# The above is more complex due to nested color codes. Keep it simple first.
+# Bun setup
+export BUN_INSTALL="$HOME/.bun"
+export PATH="$BUN_INSTALL/bin:$PATH"
 
-# Powerline
-if [ -f `which powerline-daemon` ]; then
-  powerline-daemon -q
-  POWERLINE_BASH_CONTINUATION=1
-  POWERLINE_BASH_SELECT=1
-  . /usr/share/powerline/bash/powerline.sh
-fi 
+# Git prompt setup (sourced for __git_ps1)
+if [ -f /usr/share/doc/git/contrib/completion/git-prompt.sh ]; then
+    . /usr/share/doc/git/contrib/completion/git-prompt.sh
+    GIT_PS1_SHOWDIRTYSTATE=true
+    GIT_PS1_SHOWUNTRACKEDFILES=true
+    GIT_PS1_SHOWSTASHSTATE=true
+    GIT_PS1_SHOWUPSTREAM="auto"
+    GIT_PS1_SHOWCOLORHINTS=true
+fi
+
+# Custom PS1 with Git integration (uncommented and simplified with colors)
+# Simple version: Host:dir (git-branch) $
+# Adjust colors as needed (0;32=green, 0;34=blue, 0;33=yellow)
+export PS1='\[\033[0;34m\]\h:\w\[\033[0m\]$(__git_ps1 " (\[\033[0;33m\]%s\[\033[0m\])")\$ '
+
+# Powerline setup (fallback if available; otherwise use the Git PS1 above)
+export POWERLINE_CONFIG_PATHS=~/.config/powerline
+if command -v powerline-daemon >/dev/null 2>&1; then
+    powerline-daemon -q
+    POWERLINE_BASH_CONTINUATION=1
+    POWERLINE_BASH_SELECT=1
+    . /usr/share/powerline/bash/powerline.sh
+    # If Powerline loads, override the simple PS1
+    unset PS1
+fi
+
+# Additional shopt settings for better shell behavior
+shopt -s checkwinsize  # Resize window after each command
+shopt -s autocd        # cd into directories without 'cd'
+shopt -s cdspell       # Correct minor cd misspellings
+shopt -s dotglob       # Include dotfiles in * glob
+shopt -s nocaseglob    # Case-insensitive globbing
+
+# Safety: Set a safe umask (add this if not already in /etc/profile)
+umask 0022
+
+# Local overrides (source last, for machine-specific tweaks)
+if [ -f ~/.bashrc.local ]; then
+    . ~/.bashrc.local
+fi
