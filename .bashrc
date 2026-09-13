@@ -28,8 +28,9 @@ alias up='sudo dnf upgrade --refresh -y'
 alias clean='sudo dnf autoremove -y && sudo dnf clean all'  # Also cleans cache
 alias c='clear'
 alias cls='clear && ls'  # Clear and list
-alias ll='ls -lh'  # Human-readable sizes
-alias la='ls -lAh'  # All files, human-readable
+alias l='ls --color -l'  # Long listing with color
+alias ll='ls --color -lh'  # Human-readable sizes
+alias la='ls --color -lAh'  # All files, human-readable
 alias grep='grep --color=auto'  # Colorized grep
 alias diff='diff --color=auto'  # Colorized diff
 alias ..='cd ..'
