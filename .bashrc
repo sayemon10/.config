@@ -12,7 +12,7 @@ export PATH
 export PYTHONPATH=/usr/local/lib/python3.14/site-packages:$PYTHONPATH
 # Uncomment if you don't like systemctl's auto-paging feature
 # export SYSTEMD_PAGER=
-
+set -o vi
 # Source modular configs from ~/.bashrc.d (good practice for extensions)
 if [ -d ~/.bashrc.d ]; then
     for rc in ~/.bashrc.d/*.sh; do  # Only source .sh files to avoid issues
@@ -34,14 +34,14 @@ alias grep='grep --color=auto'  # Colorized grep
 alias diff='diff --color=auto'  # Colorized diff
 alias ..='cd ..'
 alias ...='cd ../..'
+alias cc='sudo sh -c "echo 3 > /proc/sys/vm/drop_caches"'
 # alias vi='nvim'  # If you use Neovim; adjust as needed
-unset HISTFILE 
+unset HISTFILE
 # Enable color support for ls (Fedora default, but explicit for clarity)
 if [ -x /usr/bin/dircolors ]; then
     test -r ~/.dircolors && eval "$(dircolors -b ~/.dircolors)" || eval "$(dircolors -b)"
     alias ls='ls --color=auto'
 fi
-
 # NVM setup (Node Version Manager)
 export NVM_DIR="$HOME/.nvm"
 [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
@@ -90,4 +90,30 @@ umask 0022
 # Local overrides (source last, for machine-specific tweaks)
 if [ -f ~/.bashrc.local ]; then
     . ~/.bashrc.local
+fi
+export DISABLE_TELEMETRY=1
+#Zed
+export ZED_ALLOW_EMULATED_GPU=1
+
+export PATH="$HOME/.grok/bin:$PATH"
+[[ -r "$HOME/.grok/completions/bash/grok.bash" ]] && source "$HOME/.grok/completions/bash/grok.bash"
+export PATH="$HOME/.local/bin:$PATH"
+
+# Auto-attach to tmux when opening Konsole
+if [[ -n "$KONSOLE_VERSION" ]] && [[ -z "$TMUX" ]] && command -v tmux >/dev/null 2>&1; then
+    SESSION_NAME="tmux"
+    WINDOW_NAME="konsole"
+
+    # Create session if it doesn't exist
+    if ! tmux has-session -t "$SESSION_NAME" 2>/dev/null; then
+        tmux new-session -d -s "$SESSION_NAME" -n "$WINDOW_NAME"
+    else
+        # Session exists, ensure the 'konsole' window exists
+        if ! tmux list-windows -t "$SESSION_NAME" -F '#W' | grep -q "^$WINDOW_NAME$"; then
+            tmux new-window -t "$SESSION_NAME" -n "$WINDOW_NAME"
+        fi
+    fi
+
+    # Attach to session and select the specific window
+    exec tmux attach-session -t "$SESSION_NAME:$WINDOW_NAME"
 fi
