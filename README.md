@@ -1,3 +1,2 @@
-# dot-vimrc
-
-My .vimrc file for coding environment
+# dot-config
+My .config files for coding environment
