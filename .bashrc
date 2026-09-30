@@ -8,6 +8,11 @@ fi
 if ! [[ "$PATH" =~ "$HOME/.local/bin:$HOME/bin:" ]]; then
     PATH="$HOME/.local/bin:$HOME/bin:$PATH"
 fi
+
+export EDITOR=nvim
+export VISUAL=nvim
+export SUDO_EDITOR=nvim 
+
 export PATH
 export PYTHONPATH=/usr/local/lib/python3.14/site-packages:$PYTHONPATH
 # Uncomment if you don't like systemctl's auto-paging feature
