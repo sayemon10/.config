@@ -1,0 +1,153 @@
+// Zed settings
+//
+// For information on how to configure Zed, see the Zed
+// documentation: https://zed.dev/docs/configuring-zed
+//
+// To see all of Zed's default settings without changing your
+// custom settings, run `zed: open default settings` from the
+// command palette (cmd-shift-p / ctrl-shift-p)
+{
+  "cursor_animation": {
+    "enabled": true
+  },
+  "soft_wrap": "bounded",
+  "code_lens": "on",
+  "cli_default_open_behavior": "new_window",
+  "completion_menu_item_kind": "symbol",
+  "agent_servers": {
+    "github-copilot-cli": {
+      "default_config_options": {
+        "model": "gpt-5-mini",
+        "reasoning_effort": "high"
+      },
+      "type": "registry",
+    },
+    "github-copilot": {
+      "type": "registry",
+    },
+    "gemini": {
+      "type": "registry",
+    },
+  },
+  "agent": {
+    "dock": "left",
+    "default_model": {
+      "enable_thinking": true,
+      "provider": "copilot_chat",
+      "model": "gpt-5.2-codex",
+    },
+    "favorite_models": [],
+    "inline_assistant_model": {
+      "provider": "google",
+      "model": "gemini-3-pro-preview",
+      "enable_thinking": false,
+    },
+    "model_parameters": [],
+    "play_sound_when_agent_done": "always",
+    "tool_permissions": {
+      "tools": {
+        "mcp:svelte-mcp:svelte-autofixer": {
+          "default": "allow",
+        },
+        "mcp:paper-design:update_styles": {
+          "default": "allow",
+        },
+      },
+    },
+  },
+  "buffer_font_family": "JetBrains Mono",
+  "buffer_font_features": { "liga": true },
+  "buffer_font_size": 13.0,
+  "collaboration_panel": {
+    "dock": "right",
+  },
+  "colorize_brackets": true,
+  "context_servers": {
+    "paper-design": {
+      "env": {},
+      "command": "bunx",
+      "args": ["-y", "mcp-remote", "http://127.0.0.0:29979/mcp"],
+    },
+  },
+  "cursor_shape": "block",
+  "diagnostics": {
+    "inline": {
+      "enabled": true,
+    },
+  },
+  "debugger": {
+    "dock": "right",
+  },
+  "edit_predictions": {
+    "mode": "eager",
+    "provider": "copilot",
+  },
+  "hover_popover_delay": 300,
+  "git": {
+    "inline_blame": {
+      "show_commit_summary": true,
+    },
+  },
+  "git_panel": {
+    "dock": "right",
+  },
+  "icon_theme": "Zed (Default)",
+  "indent_guides": {
+    "enabled": true,
+    "coloring": "indent_aware",
+  },
+  "inlay_hints": {
+    "show_background": true,
+    "enabled": true,
+  },
+  "outline_panel": {
+    "dock": "right",
+  },
+  "prettier": {
+    "allowed": true,
+  },
+  "project_panel": {
+    "dock": "right",
+    "diagnostic_badges": true,
+  },
+  "redact_private_values": true,
+  "relative_line_numbers": "enabled",
+  "restore_on_startup": "launchpad",
+  "sticky_scroll": {
+    "enabled": true,
+  },
+  "tabs": {
+    "git_status": true,
+    "show_diagnostics": "errors",
+  },
+  "tab_size": 2,
+  "title_bar": {
+    "show_branch_status_icon": true,
+  },
+  "telemetry": {
+    "diagnostics": false,
+    "metrics": false,
+  },
+  "theme": {
+    "mode": "system",
+    "light": "Gruvbox Light",
+    "dark": "Cursor Dark",
+  },
+  "toolbar": {
+    "code_actions": true,
+    "quick_actions": false,
+    "breadcrumbs": false,
+  },
+  "ui_font_family": ".ZedSans",
+  "ui_font_size": 13.0,
+  "vim": {
+    "cursor_shape": {
+      "insert": "block",
+    },
+    "toggle_relative_line_numbers": true,
+  },
+  "vim_mode": true,
+  "which_key": {
+    "enabled": true,
+  },
+}
